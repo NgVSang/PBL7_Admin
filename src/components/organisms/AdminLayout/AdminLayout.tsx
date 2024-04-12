@@ -10,6 +10,7 @@ import {
   UploadOutlined,
   UsergroupDeleteOutlined,
   UserOutlined,
+  LinkOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -18,72 +19,75 @@ const { Header, Sider, Content } = Layout;
 export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   // const { roleName, user } = useSelector(authSelector);
-  const [itemsMenu, setItemsMenu] = useState<
-    {
+
+  const itemsMenu = useMemo(() => {
+    const menu: {
       key: string;
       icon: JSX.Element;
       label: string;
       onClick: () => void;
       danger?: boolean;
-    }[]
-  >([
-    {
-      key: "1",
-      icon: <DashboardOutlined size={30} className="" />,
-      label: "Dashboard",
-      onClick: () => {
-        router.push("/admin");
+    }[] = [
+      {
+        key: "1",
+        icon: <DashboardOutlined size={30} className="" />,
+        label: "Dashboard",
+        onClick: () => {
+          router.push("/admin");
+        },
       },
-    },
-    // {
-    //   key: "2",
-    //   icon: <UsergroupDeleteOutlined />,
-    //   label: "User Management",
-    //   onClick: () => {
-    //     router.push("/user-management");
-    //   },
-    // },
-    // {
-    //   key: "3",
-    //   icon: <FieldTimeOutlined />,
-    //   label: "Statistical",
-    //   onClick: () => {
-    //     router.push("/statistical");
-    //   },
-    // },
-    // {
-    //   key: "4",
-    //   icon: <DollarCircleOutlined />,
-    //   label: "Product Management",
-    //   onClick: () => {
-    //     router.push("/product-management");
-    //   },
-    // },
-    // {
-    //   key: "5",
-    //   icon: <DollarCircleOutlined />,
-    //   label: "Order Management",
-    //   onClick: () => {
-    //     router.push("/order-management");
-    //   },
-    // },
-    // {
-    //   key: "6",
-    //   icon: <UploadOutlined />,
-    //   label: "Requests",
-    //   onClick: () => {
-    //     router.push("/requests");
-    //   },
-    // },
-    // {
-    //   key: "7",
-    //   icon: <UserOutlined />,
-    //   label: "Roles",
-    //   onClick: () => {
-    //     router.push("/roles");
-    //   },
-    // },
-  ]);
+      {
+        key: "2",
+        icon: <LinkOutlined />,
+        label: "Link ",
+        onClick: () => {
+          router.push("/admin/Link");
+        },
+      },
+      // {
+      //   key: "3",
+      //   icon: <FieldTimeOutlined />,
+      //   label: "Statistical",
+      //   onClick: () => {
+      //     router.push("/statistical");
+      //   },
+      // },
+      // {
+      //   key: "4",
+      //   icon: <DollarCircleOutlined />,
+      //   label: "Product Management",
+      //   onClick: () => {
+      //     router.push("/product-management");
+      //   },
+      // },
+      // {
+      //   key: "5",
+      //   icon: <DollarCircleOutlined />,
+      //   label: "Order Management",
+      //   onClick: () => {
+      //     router.push("/order-management");
+      //   },
+      // },
+      // {
+      //   key: "6",
+      //   icon: <UploadOutlined />,
+      //   label: "Requests",
+      //   onClick: () => {
+      //     router.push("/requests");
+      //   },
+      // },
+      // {
+      //   key: "7",
+      //   icon: <UserOutlined />,
+      //   label: "Roles",
+      //   onClick: () => {
+      //     router.push("/roles");
+      //   },
+      // },
+    ];
+    return menu;
+  }, []);
+
   const openChangePassword = () => {};
   const openLogout = () => {};
   const router = useRouter();
@@ -113,7 +117,7 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
       case "/admin":
         select = "1";
         break;
-      case "/user-management":
+      case "/admin/Link":
         select = "2";
         break;
       case "/statistical":

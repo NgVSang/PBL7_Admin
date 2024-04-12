@@ -1,6 +1,6 @@
 import instance from "./axios";
 
-const getAllLinks = (page: number, per_page: number) => {
+const getAllLinks = (page?: number, per_page?: number) => {
   return instance.get("/links", {
     params: {
       page,
