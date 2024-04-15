@@ -1,15 +1,19 @@
 import { AdminLayout } from "@/components";
-import { monthValue, weekValue } from "@/constants";
-import { SettingApi } from "@/services";
-import { Select, Switch } from "antd";
+import { monthValue, timeOptions, weekValue } from "@/constants";
+import { CrawlApi, SettingApi } from "@/services";
+import { Button, Progress, Select, Switch, Tabs, TabsProps } from "antd";
 import { Content } from "antd/es/layout/layout";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 const Page = () => {
   const [crawl, setCrawl] = useState<boolean>(true);
   const [type, setType] = useState<"month" | "week">("week");
   const [date, setDate] = useState<number>(0);
   const [time, setTime] = useState<string>("");
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [crawlLoading, setCrawlLoading] = useState(false);
+  // const [progress, setProgress] = useState(0);
 
   const handleGetData = useCallback(async () => {
     try {
@@ -29,6 +33,11 @@ const Page = () => {
     handleGetData();
   }, []);
 
+  useEffect(() => {
+    if (crawlLoading) {
+    }
+  }, [crawlLoading]);
+
   const options = useMemo(() => {
     if (type === "week") {
       return weekValue;
@@ -37,56 +46,162 @@ const Page = () => {
     }
   }, [type, weekValue]);
 
+  const handleSaveSetting = useCallback(async () => {
+    try {
+      setSaveLoading(true);
+      await SettingApi.updateSetting({
+        crawl: crawl,
+        type: type,
+        date: date,
+        time: time,
+      });
+      toast.success("Update success");
+    } catch (error) {
+      toast.error("Faile to save!");
+    } finally {
+      setSaveLoading(false);
+    }
+  }, [type, date, time, crawl]);
+
+  const handleCrawl = useCallback(async () => {
+    try {
+      setCrawlLoading(true);
+      await CrawlApi.handleCrawlData();
+      toast.success("Crawl success");
+    } catch (error) {
+    } finally {
+      setCrawlLoading(false);
+    }
+  }, []);
+
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <span className="font-medium font-sans text-base text-[#718EBF]">
+          Auto crawl
+        </span>
+      ),
+      children: (
+        <>
+          <div className="w-full mb-[20px] items-center flex">
+            <Switch
+              value={crawl}
+              onChange={setCrawl}
+              className="!bg-[#16DBCC]"
+            />
+            <span className="font-sans ml-4 font-normal text-base mt-1 text-[#232323]">
+              Auto crawl
+            </span>
+          </div>
+          <div className="flex flex-col gap-[20px]">
+            <div className="w-full flex flex-row">
+              <div className="w-[50%]">
+                <p className="font-sans font-medium text-base mb-2">Crawl by</p>
+                <Select
+                  options={[
+                    {
+                      value: "month",
+                      label: "Month",
+                    },
+                    {
+                      value: "week",
+                      label: "Week",
+                    },
+                  ]}
+                  value={type}
+                  onChange={(value) => {
+                    setType(value);
+                    setDate(1);
+                  }}
+                  disabled={!crawl}
+                  className="w-[70%] h-[40px]"
+                />
+              </div>
+              <div className="w-[50%]">
+                <p className="font-sans font-medium text-base mb-2">
+                  Day crawl
+                </p>
+                <Select
+                  options={options}
+                  value={date}
+                  onChange={(val) => {
+                    setDate(val);
+                  }}
+                  disabled={!crawl}
+                  className="w-[70%] h-[40px]"
+                />
+              </div>
+            </div>
+            <div className="w-full flex flex-row">
+              <div className="w-[50%]">
+                <p className="font-sans font-medium text-base mb-2">Time</p>
+                <Select
+                  options={timeOptions("07:00", "18:30", 30)}
+                  value={time}
+                  onChange={(val) => {
+                    setTime(val);
+                  }}
+                  disabled={!crawl}
+                  className="w-[70%] h-[40px]"
+                />
+              </div>
+            </div>
+            <div className="w-full justify-center flex">
+              <Button
+                type="primary"
+                size="large"
+                loading={saveLoading}
+                disabled={saveLoading}
+                onClick={handleSaveSetting}
+              >
+                <span>Save</span>
+              </Button>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <span className="font-medium font-sans text-base text-[#718EBF]">
+          Manual crawl
+        </span>
+      ),
+      children: (
+        <div className="flex flex-row items-center mt-[30px]">
+          <div className="w-[50%]">
+            <Button
+              size="large"
+              type="primary"
+              onClick={handleCrawl}
+              loading={crawlLoading}
+              disabled={crawlLoading}
+            >
+              <span>Crawl</span>
+            </Button>
+          </div>
+          {/* <Progress type="circle" /> */}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <Content className="flex-1 p-6 bg-[#F5F6FA]">
-      <span className="font-sans text-black text-2xl font-bold">Setting</span>
-      <div className="px-[20px] py-[10px] bg-white rounded-[8px] shadow-md mt-[30px] w-full">
-        <div className="w-full mb-[20px]">
-          <p className="font-sans font-medium text-base mb-2">Auto crawl</p>
-          <Switch value={crawl} onChange={setCrawl} />
-        </div>
-        <div className="flex flex-col gap-[20px]">
-          <div className="w-full flex flex-row gap-[20px]">
-            <div className="w-[50%]">
-              <p className="font-sans font-medium text-base mb-2">Crawl by</p>
-              <Select
-                options={[
-                  {
-                    value: "month",
-                    label: "Month",
-                  },
-                  {
-                    value: "week",
-                    label: "Week",
-                  },
-                ]}
-                value={type}
-                onChange={(value) => {
-                  setType(value);
-                  setDate(1);
-                }}
-                className="w-[70%]"
-              />
-            </div>
-            <div className="w-[50%]">
-              <p className="font-sans font-medium text-base mb-2">Day crawl</p>
-              <Select
-                options={options}
-                value={date}
-                onChange={(val) => {
-                  setDate(val);
-                }}
-                className="w-[70%]"
-              />
-            </div>
-          </div>
-          <div className="w-full flex flex-row gap-[20px]">
-            <div className="w-[50%]">
-              <p className="font-sans font-medium text-base mb-2">Time</p>
-            </div>
-          </div>
-        </div>
+      <span className="font-sans text-black text-2xl font-bold">Settings</span>
+      <div className="px-[20px] py-[20px] bg-white rounded-[12px] shadow-md mt-[30px] w-full h-[400px]">
+        <Tabs items={items} />
       </div>
+      {/* <div className="px-[20px] py-[20px] bg-white rounded-[8px] shadow-md mt-[30px] w-full">
+        <p className="font-sans font-medium text-base mb-2">
+          Click the button to crawl immediately
+        </p>
+        <Button size="large" type="primary">
+          <span>Crawl</span>
+        </Button>
+      </div> */}
     </Content>
   );
 };

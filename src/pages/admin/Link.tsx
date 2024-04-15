@@ -43,7 +43,7 @@ const Page = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Delete fail");
+      toast.error("Delete faile");
     } finally {
       setIsLoading(false);
       setIsModalOpen(false);

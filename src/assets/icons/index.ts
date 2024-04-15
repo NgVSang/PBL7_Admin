@@ -5,3 +5,4 @@ export { default as DashboardLinkIcon } from "./dashboard-link-icon.png";
 export { default as DashboardAnswersIcon } from "./dashboard-answers-icon.png";
 export { default as DashboardPendingIcon } from "./dashboard-pending-icon.png";
 export { default as DeleteIcon } from "./delete-icon.png";
+export { default as LogoIcon } from "./logo-icon.png";
