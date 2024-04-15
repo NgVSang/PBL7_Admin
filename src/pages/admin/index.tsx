@@ -18,6 +18,7 @@ import { Table } from "antd";
 import { IDashboard } from "@/types";
 import dayjs from "dayjs";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 ChartJS.register(
   CategoryScale,
@@ -32,32 +33,34 @@ interface Props {}
 
 const Page = ({}: Props) => {
   const [data, setData] = useState<IDashboard>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGetData = useCallback(async () => {
     try {
+      setIsLoading(true);
       const res = await DashboardApi.getDashboardInfor();
       if (res.data) setData(res.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
+    if (isLoading) {
+      toast.loading("Loading", {
+        duration: 1000000,
+      });
+    }
+    return () => {
+      toast.remove();
+    };
+  }, [isLoading]);
+
+  useEffect(() => {
     handleGetData();
   }, []);
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "Number of Links crawled",
-      },
-    },
-  };
 
   const labels = [
     "January",
@@ -104,24 +107,6 @@ const Page = ({}: Props) => {
       };
     });
   }, [data]);
-
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "_id",
-      key: "id",
-    },
-    {
-      title: "Link",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Crawl day",
-      dataIndex: "createdAt",
-      key: "createdAt",
-    },
-  ];
 
   return (
     <Content className="flex-1 p-6 bg-[#F5F6FA]">

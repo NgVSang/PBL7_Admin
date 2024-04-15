@@ -17,13 +17,17 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState<ILink>();
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleGetData = useCallback(async () => {
     try {
+      setLoading(true);
       const res = await LinkApi.getAllLinks();
       if (res.data) setData(res.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -33,17 +37,16 @@ const Page = () => {
         setIsLoading(true);
         await LinkApi.deleteLinkById(selected?._id);
         toast.success("Delete success");
-        handleGetData();
-        setIsModalOpen(false);
+        await handleGetData();
       } else {
         toast.error("Can not delete link in completed state");
-        setIsModalOpen(false);
       }
     } catch (error) {
       console.log(error);
       toast.error("Delete fail");
     } finally {
       setIsLoading(false);
+      setIsModalOpen(false);
     }
   }, [selected, handleGetData]);
 
@@ -67,6 +70,7 @@ const Page = () => {
         </p>
         <Table
           dataSource={data}
+          loading={loading}
           columns={[
             {
               title: "ID",
@@ -158,6 +162,9 @@ const Page = () => {
         okButtonProps={{
           disabled: isLoading,
           loading: isLoading,
+        }}
+        cancelButtonProps={{
+          disabled: isLoading,
         }}
       >
         <p className="text-xl font-sans">

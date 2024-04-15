@@ -3,7 +3,7 @@ import { AdminLayoutProps } from "./AdminLayout.types";
 import { Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import {
   DashboardOutlined,
-  DollarCircleOutlined,
+  SettingOutlined,
   FieldTimeOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -44,14 +44,14 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
           router.push("/admin/Link");
         },
       },
-      // {
-      //   key: "3",
-      //   icon: <FieldTimeOutlined />,
-      //   label: "Statistical",
-      //   onClick: () => {
-      //     router.push("/statistical");
-      //   },
-      // },
+      {
+        key: "3",
+        icon: <SettingOutlined />,
+        label: "Setting",
+        onClick: () => {
+          router.push("/admin/Setting");
+        },
+      },
       // {
       //   key: "4",
       //   icon: <DollarCircleOutlined />,
@@ -120,7 +120,7 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
       case "/admin/Link":
         select = "2";
         break;
-      case "/statistical":
+      case "/admin/Setting":
         select = "3";
         break;
       case "/product-management":
