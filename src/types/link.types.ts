@@ -6,3 +6,11 @@ export interface ILink {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IRecord {
+  _id: string;
+  answers: number;
+  links: string[];
+  createdAt: string;
+  updatedAt: string;
+}

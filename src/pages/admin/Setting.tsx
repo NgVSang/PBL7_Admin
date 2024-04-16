@@ -1,8 +1,10 @@
 import { AdminLayout } from "@/components";
 import { monthValue, timeOptions, weekValue } from "@/constants";
 import { CrawlApi, SettingApi } from "@/services";
-import { Button, Progress, Select, Switch, Tabs, TabsProps } from "antd";
+import { IRecord } from "@/types";
+import { Button, Progress, Select, Switch, Table, Tabs, TabsProps } from "antd";
 import { Content } from "antd/es/layout/layout";
+import Link from "next/link";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -13,6 +15,7 @@ const Page = () => {
   const [time, setTime] = useState<string>("");
   const [saveLoading, setSaveLoading] = useState(false);
   const [crawlLoading, setCrawlLoading] = useState(false);
+  const [crawlData, setCrawlData] = useState<IRecord>();
   // const [progress, setProgress] = useState(0);
 
   const handleGetData = useCallback(async () => {
@@ -66,7 +69,8 @@ const Page = () => {
   const handleCrawl = useCallback(async () => {
     try {
       setCrawlLoading(true);
-      await CrawlApi.handleCrawlData();
+      const res = await CrawlApi.handleCrawlData();
+      setCrawlData(res.data);
       toast.success("Crawl success");
     } catch (error) {
     } finally {
@@ -88,7 +92,7 @@ const Page = () => {
             <Switch
               value={crawl}
               onChange={setCrawl}
-              className="!bg-[#16DBCC]"
+              className={crawl ? "!bg-[#16DBCC]" : ""}
             />
             <span className="font-sans ml-4 font-normal text-base mt-1 text-[#232323]">
               Auto crawl
@@ -147,7 +151,7 @@ const Page = () => {
                 />
               </div>
             </div>
-            <div className="w-full justify-center flex">
+            <div className="">
               <Button
                 type="primary"
                 size="large"
@@ -170,8 +174,8 @@ const Page = () => {
         </span>
       ),
       children: (
-        <div className="flex flex-row items-center mt-[30px]">
-          <div className="w-[50%]">
+        <div className="flex flex-row mt-[30px]">
+          <div className="w-[30%]">
             <Button
               size="large"
               type="primary"
@@ -182,7 +186,38 @@ const Page = () => {
               <span>Crawl</span>
             </Button>
           </div>
-          {/* <Progress type="circle" /> */}
+          <div className="w-[70%]">
+            <Table
+              loading={crawlLoading}
+              columns={[
+                {
+                  title: "LINK",
+                  key: "name",
+                  dataIndex: "name",
+                  render: (value) => (
+                    <Link
+                      href={value}
+                      target="_blank"
+                      className="text-blue-500"
+                    >
+                      {value}
+                    </Link>
+                  ),
+                },
+              ]}
+              dataSource={crawlData?.links.map((e) => {
+                return {
+                  name: e,
+                };
+              })}
+            />
+            <p className="text-sm text-gray-500">
+              Total answers:{" "}
+              <span className="text-base font-medium">
+                {crawlData?.answers ?? "..."}
+              </span>
+            </p>
+          </div>
         </div>
       ),
     },

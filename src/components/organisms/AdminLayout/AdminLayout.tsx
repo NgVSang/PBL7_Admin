@@ -215,7 +215,7 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
         >
           {children}
         </Content> */}
-        {children}
+        <div className="h-screen overflow-scroll">{children}</div>
       </Layout>
     </Layout>
   );
