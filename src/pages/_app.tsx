@@ -6,6 +6,7 @@ import { FC, ReactElement, ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/store";
+import { AuthGuard } from "@/components";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -43,7 +44,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             }}
           />
           <Layout pageProps={pageProps}>
-            <Component {...pageProps} />
+            {requireAuth ? (
+              <AuthGuard>
+                <Component {...pageProps} />
+              </AuthGuard>
+            ) : (
+              <Component {...pageProps} />
+            )}
           </Layout>
         </div>
       </PersistGate>

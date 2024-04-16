@@ -243,3 +243,4 @@ const Page = () => {
 
 export default Page;
 Page.Layout = AdminLayout;
+Page.requireAuth = true;

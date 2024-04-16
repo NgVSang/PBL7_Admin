@@ -14,11 +14,14 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { authSelector, logout } from "@/redux/reducers";
 
 const { Header, Sider, Content } = Layout;
 export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  // const { roleName, user } = useSelector(authSelector);
+  const { user } = useSelector(authSelector);
+  const dispatch = useDispatch();
 
   const itemsMenu = useMemo(() => {
     const menu: {
@@ -52,44 +55,15 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
           router.push("/admin/Setting");
         },
       },
-      // {
-      //   key: "4",
-      //   icon: <DollarCircleOutlined />,
-      //   label: "Product Management",
-      //   onClick: () => {
-      //     router.push("/product-management");
-      //   },
-      // },
-      // {
-      //   key: "5",
-      //   icon: <DollarCircleOutlined />,
-      //   label: "Order Management",
-      //   onClick: () => {
-      //     router.push("/order-management");
-      //   },
-      // },
-      // {
-      //   key: "6",
-      //   icon: <UploadOutlined />,
-      //   label: "Requests",
-      //   onClick: () => {
-      //     router.push("/requests");
-      //   },
-      // },
-      // {
-      //   key: "7",
-      //   icon: <UserOutlined />,
-      //   label: "Roles",
-      //   onClick: () => {
-      //     router.push("/roles");
-      //   },
-      // },
     ];
     return menu;
   }, []);
 
   const openChangePassword = () => {};
-  const openLogout = () => {};
+  const openLogout = () => {
+    dispatch(logout());
+    router.push("/");
+  };
   const router = useRouter();
   const {
     token: { colorBgContainer },
@@ -180,28 +154,10 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
             arrow
             className="avatar"
           >
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <p
-                style={{
-                  marginRight: "10px",
-                  fontFamily: "sans-serif",
-                  fontSize: "15px",
-                  fontWeight: 500,
-                }}
-              >
-                {/* {user?.account?.userName} */}
+            <div className="mr-[20px]">
+              <p className="mr-[10px] font-sans text-base font-medium cursor-pointer">
+                {user?.name}
               </p>
-              <div className="w-[40px] h-[40px] overflow-hidden rounded-[40px]">
-                {/* <Image 
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${userInfo?.profilePicture}`}
-                    alt="Profile Picture"
-                    width={40}
-                    height={40}
-                    style={{
-                        resize:"both"
-                    }}
-                  /> */}
-              </div>
             </div>
           </Dropdown>
         </Header>

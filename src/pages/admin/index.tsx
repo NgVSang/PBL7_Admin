@@ -194,3 +194,4 @@ const Page = ({}: Props) => {
 };
 export default Page;
 Page.Layout = AdminLayout;
+Page.requireAuth = true;
