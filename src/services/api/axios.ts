@@ -6,6 +6,10 @@ const baseURL = `${BASE_URL}/api`;
 const instance = axios.create({
   baseURL: baseURL,
   // Các cấu hình khác của Axios
+  headers: {
+    "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
+  },
 });
 
 const handleSuccessResponse = (response: AxiosResponse<any, any>) => {

@@ -66,13 +66,13 @@ const DashboardTotal: FC<DashboardTotalProps> = ({ data }) => {
           />
           <span
             className={`${
-              data?.links.growth ? "text-[#00B69B]" : "text-[#F93C65]"
+              data?.links?.growth ? "text-[#00B69B]" : "text-[#F93C65]"
             } text-sm font-sans font-normal px-1`}
           >
             {data?.links?.value}
           </span>
           <span className="text-black text-sm font-sans font-normal">
-            {data?.links.growth ? "Up" : "Down"} from last month
+            {data?.links?.growth ? "Up" : "Down"} from last month
           </span>
         </div>
       </div>
@@ -97,13 +97,13 @@ const DashboardTotal: FC<DashboardTotalProps> = ({ data }) => {
           <Image src={GrownUpIcon} alt="grown-up" width={24} height={24} />
           <span
             className={`${
-              data?.answers.growth ? "text-[#00B69B]" : "text-[#F93C65]"
+              data?.answers?.growth ? "text-[#00B69B]" : "text-[#F93C65]"
             } text-sm font-sans font-normal px-1`}
           >
             {data?.answers?.value}
           </span>
           <span className="text-black text-sm font-sans font-normal">
-            {data?.answers.growth ? "Up" : "Down"} from last month
+            {data?.answer?.growth ? "Up" : "Down"} from last month
           </span>
         </div>
       </div>
