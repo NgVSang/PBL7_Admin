@@ -1,6 +1,7 @@
 import { LogoIcon } from "@/assets/icons";
-import { setUser } from "@/redux/reducers";
+import { setCredential, setUser } from "@/redux/reducers";
 import { AuthApi } from "@/services";
+import { setHeaderConfigAxios } from "@/services/api/axios";
 import { Input, Form, Button, FormProps } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -22,11 +23,13 @@ const Page = () => {
     try {
       setIsLoading(true);
       const res = await AuthApi.login(values);
-      toast.success(`Welcome back ${res.data.name}`);
-      dispatch(setUser(res.data));
-      if (res.data.role === 1) {
+      toast.success(`Welcome back ${res.data.user?.name}`);
+      dispatch(setUser(res.data.user));
+      setHeaderConfigAxios(res.data.access_token);
+      dispatch(setCredential(res.data.access_token));
+      if (res.data.user?.role === 1) {
         router.push("/");
-      } else if (res.data.role === 2) {
+      } else if (res.data.user?.role === 2) {
         router.push("/admin");
       }
     } catch (error) {

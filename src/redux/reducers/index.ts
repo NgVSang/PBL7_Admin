@@ -3,4 +3,5 @@ export {
   authSelector,
   logout,
   setUser,
+  setCredential,
 } from "./auth.reducer";

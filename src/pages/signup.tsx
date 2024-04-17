@@ -27,8 +27,8 @@ const Page = () => {
       } else {
         toast.error("Confirm password is not correct!");
       }
-    } catch (error) {
-      toast.error("Create failed!");
+    } catch (error: any) {
+      toast.error(error?.message || "Create failed!");
     } finally {
       setIsLoading(false);
     }

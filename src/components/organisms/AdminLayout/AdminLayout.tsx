@@ -116,7 +116,7 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
   }, [router.pathname]);
 
   return (
-    <Layout className="wrapper min-h-screen bg-blue-100">
+    <Layout className="wrapper h-screen bg-blue-100">
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
         <div className="logo">
           <p className="text-white">Admin</p>
@@ -130,15 +130,7 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
         />
       </Sider>
       <Layout className="site-layout">
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <Header className="bg-white flex p-0 justify-between items-center sticky top-0 z-10">
           <div className="ml-5">
             {React.createElement(
               collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
@@ -161,16 +153,6 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
             </div>
           </Dropdown>
         </Header>
-        {/* <Content
-          className="flex-1 mt-6 mb-6 ml-4 mr-4 p-6 bg-white"
-          style={
-            {
-              // background: colorBgContainer,
-            }
-          }
-        >
-          {children}
-        </Content> */}
         <div className="h-screen overflow-scroll">{children}</div>
       </Layout>
     </Layout>

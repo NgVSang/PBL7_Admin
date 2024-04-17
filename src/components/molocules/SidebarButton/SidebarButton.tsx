@@ -13,14 +13,14 @@ const SidebarButton: FC<SidebarButtonProps> = ({
   const icon = useMemo(() => {
     if (type === "action") {
       return (
-        <div className="rounded-full w-[40px] h-[40px] bg-white border border-gray-200 flex items-center justify-center">
+        <div className="rounded-full min-w-[40px] h-[40px] bg-gray-200 border border-gray-200 flex items-center justify-center">
           <Image src={SmallLogoIcon} alt="Logo" className="w-[20px] h-[20px]" />
         </div>
       );
     }
     if (type === "user") {
       return (
-        <div className="rounded-full w-[40px] h-[40px] bg-white border border-gray-200 flex items-center justify-center">
+        <div className="rounded-full min-w-[40px] h-[40px] bg-white border border-gray-200 flex items-center justify-center">
           <Image
             src={DefaultAvatarIcon}
             alt="Logo"
@@ -49,9 +49,9 @@ const SidebarButton: FC<SidebarButtonProps> = ({
       }`}
       {...props}
     >
-      <div className="flex flex-row items-center gap-3 ">
+      <div className="flex flex-row items-center gap-3 whitespace-nowrap overflow-hidden">
         {icon}
-        <span className="font-sans font-medium text-black text-base">
+        <span className="font-sans font-medium text-black text-base text-ellipsis w-full overflow-hidden ">
           {text}
         </span>
       </div>

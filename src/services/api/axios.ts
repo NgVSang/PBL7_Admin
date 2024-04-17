@@ -8,6 +8,7 @@ const instance = axios.create({
   // Các cấu hình khác của Axios
   headers: {
     "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
     "ngrok-skip-browser-warning": "true",
   },
 });

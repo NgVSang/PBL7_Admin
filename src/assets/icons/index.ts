@@ -10,3 +10,4 @@ export { default as SmallLogoIcon } from "./small-logo-icon.png";
 export { default as NewChatIcon } from "./new-chat-icon.png";
 export { default as DefaultAvatarIcon } from "./default-avatar-icon.jpg";
 export { default as LogoutIcon } from "./logout-icon.png";
+export { default as SubmitIcon } from "./submit-icon.png";

@@ -5,6 +5,7 @@ import { RootState } from "../store";
 export type AuthState = {
   loggedin: boolean;
   user?: IUser;
+  access_token?: string;
 };
 
 const initialState: AuthState = {
@@ -19,14 +20,19 @@ const authSlice = createSlice({
       state.loggedin = true;
       state.user = action.payload;
     },
+    setCredential: (state, action: PayloadAction<string>) => {
+      state.loggedin = true;
+      state.access_token = action.payload;
+    },
     logout: (state, action: PayloadAction) => {
       state.loggedin = false;
       state.user = undefined;
+      state.access_token = undefined;
     },
   },
 });
 
 export const authSelector = (state: RootState) => state.auth;
 
-export const { logout, setUser } = authSlice.actions;
+export const { logout, setUser, setCredential } = authSlice.actions;
 export default authSlice.reducer;

@@ -12,8 +12,13 @@ type LoginType = {
   password?: string;
 };
 
+interface LoginResponse {
+  access_token: string;
+  user: IUser;
+}
+
 const login = (data: LoginType) => {
-  return instance.post<IUser>("/auth/login", data);
+  return instance.post<LoginResponse>("/auth/login", data);
 };
 
 const register = (data: RegisterType) => {
