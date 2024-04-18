@@ -76,7 +76,11 @@ const Page = () => {
   }, []);
 
   const addNewAnswers = useCallback(() => {
-    setAnswers([...answers, ""]);
+    if (answers.length === 4) {
+      toast.error("You only can type 4 answers per question!");
+    } else {
+      setAnswers([...answers, ""]);
+    }
   }, [answers]);
 
   const deleteAnswers = useCallback(
@@ -285,7 +289,7 @@ const Page = () => {
             tabIndex={0}
           />
           <div
-            className="flex flex-row gap-y-5 justify-between flex-wrap max-h-[150px] overflow-y-auto bar"
+            className="flex flex-row gap-y-5 justify-between flex-wrap max-h-[140px] overflow-y-auto bar"
             style={{
               scrollbarWidth: "none",
             }}

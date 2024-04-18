@@ -10,7 +10,7 @@ const ContentQuiz: FC<ContentQuizProps> = ({ data }) => {
 
   if (data.type === "ask") {
     return (
-      <div className="flex flex-row px-[20px] pt-[20px] items-start, gap-2">
+      <div className="flex flex-row px-[20px] pt-[30px] items-start, gap-2">
         <Image
           src={DefaultAvatarIcon}
           alt="Logo"
@@ -25,7 +25,7 @@ const ContentQuiz: FC<ContentQuizProps> = ({ data }) => {
               {data.question}
             </p>
             {data.answers.map((ans) => (
-              <p className="font-sans text-black text-base">{ans}</p>
+              <p className="font-sans text-black text-base px-[20px]">{ans}</p>
             ))}
           </div>
         </div>
@@ -46,8 +46,9 @@ const ContentQuiz: FC<ContentQuizProps> = ({ data }) => {
             Correct answer:{" "}
             {data.correct_answer === "" ? "Not Found" : data.correct_answer}
           </p>
-          <p className="font-sans text-black text-base">
-            Explain: {data.explanation === "" ? "Not Found" : data.explanation}
+          <p className="font-sans text-black text-base px-[10px]">
+            <span className="font-semibold underline">Explain:</span>{" "}
+            {data.explanation === "" ? "Not Found" : data.explanation}
           </p>
         </div>
       </div>
