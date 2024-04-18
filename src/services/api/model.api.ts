@@ -1,4 +1,4 @@
-import { IRecord } from "@/types";
+import { IConversation, IRecord } from "@/types";
 import instance from "./axios";
 
 type QuestionType = {
@@ -15,8 +15,8 @@ const getAnswerByCustomer = (data: QuestionType) => {
   return instance.post("/customer/question", data);
 };
 
-const getConversationCustomer = () => {
-  return instance.get("/user/conversation");
+const getConversationUser = () => {
+  return instance.get<IConversation[]>("/user/conversation");
 };
 
 const getConversationContent = (id: string) => {
@@ -26,6 +26,6 @@ const getConversationContent = (id: string) => {
 export const ModelApi = {
   getAnswerByUser,
   getAnswerByCustomer,
-  getConversationCustomer,
+  getConversationUser,
   getConversationContent,
 };

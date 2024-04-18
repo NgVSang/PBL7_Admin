@@ -7,3 +7,11 @@ export const convertNumber = (number?: number) => {
   }
   return "...";
 };
+
+export const slowGenerate = (text: string) => {
+  let result = "";
+  setInterval(() => {
+    result += text[result.length];
+  }, 10);
+  return result;
+};

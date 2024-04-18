@@ -9,7 +9,7 @@ import { uppercaseLetters } from "@/constants";
 import { authSelector } from "@/redux/reducers";
 import { ModelApi } from "@/services";
 import { IContent, IConversation } from "@/types";
-import { Button, Input } from "antd";
+import { Avatar, Button, Input, List, Skeleton } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, {
@@ -38,7 +38,7 @@ const Page = () => {
 
   const handleGetHistory = useCallback(async () => {
     try {
-      const res = await ModelApi.getConversationCustomer();
+      const res = await ModelApi.getConversationUser();
       setData(res.data);
     } catch (error) {
       console.log(error);
@@ -49,9 +49,18 @@ const Page = () => {
     handleGetHistory();
   }, []);
 
+  useEffect(() => {
+    if (!loggedin) {
+      setCurrentConversation(undefined);
+      setData([]);
+      setContents([]);
+    }
+  }, [loggedin]);
+
   const handleClickConversation = useCallback(async (data: IConversation) => {
     try {
       setIsLoading(true);
+      setContents([]);
       setCurrentConversation(data);
       const res = await ModelApi.getConversationContent(data._id);
       setContents(res.data);
@@ -92,21 +101,7 @@ const Page = () => {
       const newArr = answers.map((ans, index) => {
         return `${uppercaseLetters[index]}. ${ans}`;
       });
-      let res: any;
-      if (loggedin) {
-        res = await ModelApi.getAnswerByUser({
-          answers: newArr,
-          question: question,
-          conversationId: conversationId,
-        });
-      } else {
-        res = await ModelApi.getAnswerByCustomer({
-          answers: newArr,
-          question: question,
-          conversationId: conversationId,
-        });
-      }
-      setContents([
+      setContents((contents) => [
         ...contents,
         {
           _id: "",
@@ -119,6 +114,36 @@ const Page = () => {
           type: "ask",
           updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
         },
+      ]);
+      let res: any;
+      if (loggedin) {
+        res = await ModelApi.getAnswerByUser({
+          answers: newArr,
+          question: question,
+          conversationId: conversationId,
+        });
+        if (!currentConversation) {
+          try {
+            const conversations = await ModelApi.getConversationUser();
+            setData(conversations.data);
+            setCurrentConversation(
+              conversations.data.filter(
+                (e) => e._id === res.data.conversation_id
+              )[0]
+            );
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      } else {
+        res = await ModelApi.getAnswerByCustomer({
+          answers: newArr,
+          question: question,
+          conversationId: conversationId,
+        });
+      }
+      setContents((contents) => [
+        ...contents,
         {
           _id: "",
           answers: newArr,
@@ -202,6 +227,11 @@ const Page = () => {
     );
   }, [answers, addNewAnswers]);
 
+  const handleAddNewChat = useCallback(() => {
+    setCurrentConversation(undefined);
+    setContents([]);
+  }, []);
+
   return (
     <div className="bg-white relative z-0 flex h-screen w-full overflow-hidden">
       <div className="w-[25%] h-full flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary">
@@ -210,6 +240,7 @@ const Page = () => {
             text="New chat"
             type="action"
             className="mx-[20px] mt-[20px]"
+            onClick={handleAddNewChat}
           />
           <div className="">
             <p className="text-base font-sans text-gray-500 mx-[20px]">
@@ -257,6 +288,9 @@ const Page = () => {
             {contents.map((e) => (
               <ContentQuiz data={e} key={e._id} />
             ))}
+            <div className="px-[20px] py-[30px]">
+              {(isLoading || loading) && <Skeleton active avatar></Skeleton>}
+            </div>
           </div>
         </div>
         <div className="py-8 px-5 gap-[20px] flex flex-col bg-gray-100">
