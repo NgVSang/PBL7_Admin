@@ -94,7 +94,12 @@ const DashboardTotal: FC<DashboardTotalProps> = ({ data }) => {
           </div>
         </div>
         <div className="flex flex-row items-center">
-          <Image src={GrownUpIcon} alt="grown-up" width={24} height={24} />
+          <Image
+            src={data?.answers?.growth ? GrownUpIcon : GrownDownIcon}
+            alt="grown-up"
+            width={24}
+            height={24}
+          />
           <span
             className={`${
               data?.answers?.growth ? "text-[#00B69B]" : "text-[#F93C65]"
@@ -103,7 +108,7 @@ const DashboardTotal: FC<DashboardTotalProps> = ({ data }) => {
             {data?.answers?.value}
           </span>
           <span className="text-black text-sm font-sans font-normal">
-            {data?.answer?.growth ? "Up" : "Down"} from last month
+            {data?.answers?.growth ? "Up" : "Down"} from last month
           </span>
         </div>
       </div>

@@ -25,7 +25,12 @@ const register = (data: RegisterType) => {
   return instance.post("/auth/create", data);
 };
 
+const getAllUser = () => {
+  return instance.get("/admin/users");
+};
+
 export const AuthApi = {
   login,
   register,
+  getAllUser,
 };

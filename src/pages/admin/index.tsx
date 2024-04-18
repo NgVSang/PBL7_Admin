@@ -5,6 +5,7 @@ import { DashboardApi, LinkApi } from "@/services";
 import { AdminLayout, DashboardTotal } from "@/components";
 import { Content } from "antd/es/layout/layout";
 import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,6 +14,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  PointElement,
+  LineElement,
 } from "chart.js";
 import { Table } from "antd";
 import { IDashboard } from "@/types";
@@ -24,6 +27,11 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
   Title,
   Tooltip,
   Legend
@@ -83,6 +91,7 @@ const Page = ({}: Props) => {
       {
         label: "Total Links",
         data: data?.links?.per_months,
+        borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
@@ -94,6 +103,7 @@ const Page = ({}: Props) => {
       {
         label: "Total Answers",
         data: data?.answers?.per_months,
+        borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],

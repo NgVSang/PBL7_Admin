@@ -116,7 +116,7 @@ const Page = () => {
                   value={type}
                   onChange={(value) => {
                     setType(value);
-                    setDate(1);
+                    setDate(value === "month" ? 1 : 0);
                   }}
                   disabled={!crawl}
                   className="w-[70%] h-[40px]"
