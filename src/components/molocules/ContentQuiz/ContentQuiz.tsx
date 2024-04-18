@@ -43,10 +43,11 @@ const ContentQuiz: FC<ContentQuizProps> = ({ data }) => {
         </span>
         <div className="flex flex-col mt-[5px] gap-2">
           <p className="font-sans font-semibold text-black text-xl mb-[10px]">
-            Correct answer: {data.correct_answer}
+            Correct answer:{" "}
+            {data.correct_answer === "" ? "Not Found" : data.correct_answer}
           </p>
           <p className="font-sans text-black text-base">
-            Explain: {data.explanation}
+            Explain: {data.explanation === "" ? "Not Found" : data.explanation}
           </p>
         </div>
       </div>

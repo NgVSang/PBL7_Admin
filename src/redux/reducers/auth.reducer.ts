@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "../../types";
 import { RootState } from "../store";
+import { setHeaderConfigAxios } from "@/services/api/axios";
 
 export type AuthState = {
   loggedin: boolean;
@@ -25,6 +26,7 @@ const authSlice = createSlice({
       state.access_token = action.payload;
     },
     logout: (state, action: PayloadAction) => {
+      setHeaderConfigAxios();
       state.loggedin = false;
       state.user = undefined;
       state.access_token = undefined;

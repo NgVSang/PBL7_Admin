@@ -96,72 +96,77 @@ const Page = () => {
 
   const handleGetAnswer = useCallback(async () => {
     try {
-      setLoading(true);
-      const conversationId = currentConversation?._id || "";
-      const newArr = answers.map((ans, index) => {
-        return `${uppercaseLetters[index]}. ${ans}`;
-      });
-      setContents((contents) => [
-        ...contents,
-        {
-          _id: "",
-          answers: newArr,
-          conversationId: conversationId,
-          correct_answer: "",
-          createdAt: "",
-          explanation: "",
-          question: question,
-          type: "ask",
-          updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
-        },
-      ]);
-      let res: any;
-      if (loggedin) {
-        res = await ModelApi.getAnswerByUser({
-          answers: newArr,
-          question: question,
-          conversationId: conversationId,
-        });
-        if (!currentConversation) {
-          try {
-            const conversations = await ModelApi.getConversationUser();
-            setData(conversations.data);
-            setCurrentConversation(
-              conversations.data.filter(
-                (e) => e._id === res.data.conversation_id
-              )[0]
-            );
-          } catch (error) {
-            console.log(error);
-          }
-        }
+      if (question === "" || answers.includes("")) {
+        toast.error("Please complete all information!");
       } else {
-        res = await ModelApi.getAnswerByCustomer({
-          answers: newArr,
-          question: question,
-          conversationId: conversationId,
+        setLoading(true);
+        const conversationId = currentConversation?._id || "";
+        const newArr = answers.map((ans, index) => {
+          return `${uppercaseLetters[index]}. ${ans}`;
         });
+        setContents((contents) => [
+          ...contents,
+          {
+            _id: "",
+            answers: newArr,
+            conversationId: conversationId,
+            correct_answer: "",
+            createdAt: "",
+            explanation: "",
+            question: question,
+            type: "ask",
+            updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
+          },
+        ]);
+        let res: any;
+        if (loggedin) {
+          res = await ModelApi.getAnswerByUser({
+            answers: newArr,
+            question: question,
+            conversationId: conversationId,
+          });
+          if (!currentConversation) {
+            try {
+              const conversations = await ModelApi.getConversationUser();
+              setData(conversations.data);
+              setCurrentConversation(
+                conversations.data.filter(
+                  (e) => e._id === res.data.conversation_id
+                )[0]
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        } else {
+          res = await ModelApi.getAnswerByCustomer({
+            answers: newArr,
+            question: question,
+            conversationId: conversationId,
+          });
+        }
+        setContents((contents) => [
+          ...contents,
+          {
+            _id: "",
+            answers: newArr,
+            conversationId: conversationId,
+            correct_answer: res.data.correct_answer,
+            createdAt: "",
+            explanation: res.data.explanation,
+            question: question,
+            type: "answer",
+            updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
+          },
+        ]);
+        setQuestions("");
+        setAnswers(["", ""]);
       }
-      setContents((contents) => [
-        ...contents,
-        {
-          _id: "",
-          answers: newArr,
-          conversationId: conversationId,
-          correct_answer: res.data.correct_answer,
-          createdAt: "",
-          explanation: res.data.explanation,
-          question: question,
-          type: "answer",
-          updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
-        },
-      ]);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      toast.error(error?.message || "There are some problem");
     } finally {
       setLoading(false);
-      setQuestions("");
-      setAnswers(["", ""]);
     }
   }, [answers, question, currentConversation, contents]);
 
@@ -171,61 +176,6 @@ const Page = () => {
         messageContainerRef.current.scrollHeight;
     }
   }, [contents]);
-
-  const renderAnswers = useMemo(() => {
-    return (
-      <div
-        className="flex flex-row gap-y-5 justify-between flex-wrap max-h-[200px] overflow-y-auto bar"
-        style={{
-          scrollbarWidth: "none",
-        }}
-      >
-        {answers.map((ans, index) => (
-          <div className="w-[47%] flex flex-row items-center" key={index}>
-            <span className="text-black text-2xl mr-3">
-              {uppercaseLetters[index]}.
-            </span>
-            <Input
-              className="min-h-[50px] text-xl text-black rounded-[12px] border-gray-400 w-full"
-              placeholder={`Input answer ${uppercaseLetters[index]}`}
-              value={ans}
-              tabIndex={index + 1}
-              onChange={(event) => {
-                setAnswers(
-                  answers.map((text, i) => {
-                    if (i === index) {
-                      return event.target.value;
-                    } else {
-                      return text;
-                    }
-                  })
-                );
-              }}
-              suffix={
-                <div
-                  className="cursor-pointer"
-                  onClick={() => {
-                    deleteAnswers(index);
-                  }}
-                >
-                  <Image src={DeleteIcon} alt="Submit" width={20} />
-                </div>
-              }
-            />
-          </div>
-        ))}
-        <div className="w-[47%] ">
-          <Button
-            className="min-h-[48px] rounded-[12px] min-w-[60%]"
-            type="primary"
-            onClick={addNewAnswers}
-          >
-            <span>Add</span>
-          </Button>
-        </div>
-      </div>
-    );
-  }, [answers, addNewAnswers]);
 
   const handleAddNewChat = useCallback(() => {
     setCurrentConversation(undefined);
@@ -246,7 +196,7 @@ const Page = () => {
             <p className="text-base font-sans text-gray-500 mx-[20px]">
               History
             </p>
-            <div className="mt-[20px] flex flex-col gap-2 h-[500px] overflow-y-scroll px-[20px]">
+            <div className="mt-[20px] flex flex-col gap-2 h-[450px] overflow-y-scroll px-[20px]">
               {data.map((conversation) => (
                 <SidebarButton
                   text={conversation.title}
@@ -262,14 +212,29 @@ const Page = () => {
           {loggedin && user ? (
             <UserInfor className="mx-[20px] mb-[30px]" />
           ) : (
-            <div className="px-[20px] pb-[30px]">
-              <Button
-                type="primary"
-                className="w-full h-[40px] rounded-xl"
-                onClick={handleSignIn}
-              >
-                Sign In
-              </Button>
+            <div className="flex flex-col w-full pb-[30px] gap-5">
+              <div className="px-[20px]">
+                <div
+                  className="w-full h-[40px] rounded-xl bg-green-500 flex items-center justify-center cursor-pointer hover:bg-green-600"
+                  onClick={() => {
+                    router.push("/signup");
+                  }}
+                >
+                  <span className="font-sans text-base text-white font-medium">
+                    Sign Up
+                  </span>
+                </div>
+              </div>
+              <div className="px-[20px]">
+                <div
+                  className="w-full h-[40px] border border-gray-400 rounded-xl bg-gray-100 flex items-center justify-center cursor-pointer hover:bg-gray-200"
+                  onClick={handleSignIn}
+                >
+                  <span className="font-sans text-base text-black font-medium">
+                    Login
+                  </span>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -288,9 +253,25 @@ const Page = () => {
             {contents.map((e) => (
               <ContentQuiz data={e} key={e._id} />
             ))}
-            <div className="px-[20px] py-[30px]">
-              {(isLoading || loading) && <Skeleton active avatar></Skeleton>}
-            </div>
+            {(isLoading || loading) && (
+              <div className="px-[20px] py-[30px]">
+                <Skeleton active avatar />
+              </div>
+            )}
+            {!currentConversation && contents.length === 0 && (
+              <div className="w-full items-center flex flex-col pt-[100px] gap-[20px]">
+                <div className="rounded-full w-[70px] h-[70px] bg-gray-200 border border-gray-200 flex items-center justify-center">
+                  <Image
+                    src={SmallLogoIcon}
+                    alt="Logo"
+                    className="w-[35px] h-[35px]"
+                  />
+                </div>
+                <span className="text-3xl text-black font-medium font-sans">
+                  How can I help you?
+                </span>
+              </div>
+            )}
           </div>
         </div>
         <div className="py-8 px-5 gap-[20px] flex flex-col bg-gray-100">
@@ -302,20 +283,67 @@ const Page = () => {
               setQuestions(event.target.value);
             }}
             tabIndex={0}
-            suffix={
-              <Button
-                className="bg-gray-200 cursor-pointer p-1 rounded-lg hover:bg-gray-300"
-                loading={loading}
-                disabled={loading}
-                onClick={handleGetAnswer}
-              >
-                {!loading && (
-                  <Image src={SubmitIcon} alt="Submit" width={24} height={24} />
-                )}
-              </Button>
-            }
           />
-          {renderAnswers}
+          <div
+            className="flex flex-row gap-y-5 justify-between flex-wrap max-h-[150px] overflow-y-auto bar"
+            style={{
+              scrollbarWidth: "none",
+            }}
+          >
+            {answers.map((ans, index) => (
+              <div className="w-[47%] flex flex-row items-center" key={index}>
+                <span className="text-black text-2xl mr-3">
+                  {uppercaseLetters[index]}.
+                </span>
+                <Input
+                  className="min-h-[50px] text-xl text-black rounded-[12px] border-gray-400 w-full"
+                  placeholder={`Input answer ${uppercaseLetters[index]}`}
+                  value={ans}
+                  tabIndex={index + 1}
+                  onChange={(event) => {
+                    setAnswers(
+                      answers.map((text, i) => {
+                        if (i === index) {
+                          return event.target.value;
+                        } else {
+                          return text;
+                        }
+                      })
+                    );
+                  }}
+                  suffix={
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        deleteAnswers(index);
+                      }}
+                    >
+                      <Image src={DeleteIcon} alt="Submit" width={20} />
+                    </div>
+                  }
+                />
+              </div>
+            ))}
+          </div>
+          <div className="w-full flex flex-row justify-end gap-5">
+            <div
+              className="min-w-[200px] min-h-[48px] text-black border border-gray-600 rounded-xl bg-white flex items-center justify-center cursor-pointer hover:border-blue-400 hover:text-blue-400"
+              onClick={addNewAnswers}
+            >
+              <span className="font-sans text-base font-medium">Add</span>
+            </div>
+            <Button
+              className="min-h-[48px] rounded-[12px] min-w-[200px]"
+              type="primary"
+              loading={loading}
+              disabled={loading}
+              onClick={handleGetAnswer}
+            >
+              <span className="font-sans text-base text-white font-medium">
+                Submit
+              </span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
