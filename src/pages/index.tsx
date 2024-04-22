@@ -104,8 +104,6 @@ const Page = () => {
         toast.error("Please complete all information!");
       } else {
         setLoading(true);
-        setQuestions("");
-        setAnswers(["", ""]);
         const conversationId = currentConversation?._id || "";
         const newArr = answers.map((ans, index) => {
           return `${uppercaseLetters[index]}. ${ans}`;
@@ -151,6 +149,8 @@ const Page = () => {
             conversationId: conversationId,
           });
         }
+        setQuestions("");
+        setAnswers(["", ""]);
         setContents((contents) => [
           ...contents,
           {
