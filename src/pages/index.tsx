@@ -154,7 +154,7 @@ const Page = () => {
         setContents((contents) => [
           ...contents,
           {
-            _id: "",
+            _id: res.data?.answer_id || "",
             answers: newArr,
             conversationId: conversationId,
             correct_answer: res.data.correct_answer,
