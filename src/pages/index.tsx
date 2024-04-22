@@ -104,6 +104,8 @@ const Page = () => {
         toast.error("Please complete all information!");
       } else {
         setLoading(true);
+        setQuestions("");
+        setAnswers(["", ""]);
         const conversationId = currentConversation?._id || "";
         const newArr = answers.map((ans, index) => {
           return `${uppercaseLetters[index]}. ${ans}`;
@@ -163,12 +165,14 @@ const Page = () => {
             updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
           },
         ]);
-        setQuestions("");
-        setAnswers(["", ""]);
       }
     } catch (error: any) {
       console.log(error);
       toast.error(error?.message || "There are some problem");
+      setContents((contents) => {
+        const newContents = contents.slice(0, -1);
+        return newContents;
+      });
     } finally {
       setLoading(false);
     }
@@ -188,7 +192,7 @@ const Page = () => {
 
   return (
     <div className="bg-white relative z-0 flex h-screen w-full overflow-hidden">
-      <div className="w-[25%] h-full flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary">
+      <div className="w-[25%] min-w-[200px] max-w-[300px] h-full flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary">
         <div className="bg-gray-50 h-full flex flex-col justify-between">
           <SidebarButton
             text="New chat"
@@ -250,10 +254,10 @@ const Page = () => {
           </span>
         </div>
         <div
-          className="overflow-y-auto h-full w-full flex-1 overflow-hidden"
+          className="overflow-y-auto h-full w-full flex-1 overflow-hidden items-center flex flex-col"
           ref={messageContainerRef}
         >
-          <div className="flex flex-col pb-[30px]">
+          <div className="flex flex-col pb-[30px] max-w-[800px] w-[90%]">
             {contents.map((e) => (
               <ContentQuiz data={e} key={e._id} />
             ))}

@@ -23,9 +23,16 @@ const getConversationContent = (id: string) => {
   return instance.get(`/user/conversation/${id}`);
 };
 
+const ratingConversationContent = (id: string, feedback: string) => {
+  return instance.post(`/user/content/${id}/rate`, {
+    feedback,
+  });
+};
+
 export const ModelApi = {
   getAnswerByUser,
   getAnswerByCustomer,
   getConversationUser,
   getConversationContent,
+  ratingConversationContent,
 };

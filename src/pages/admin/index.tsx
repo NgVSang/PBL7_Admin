@@ -4,8 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { DashboardApi, LinkApi } from "@/services";
 import { AdminLayout, DashboardTotal } from "@/components";
 import { Content } from "antd/es/layout/layout";
-import { Bar } from "react-chartjs-2";
-import { Line } from "react-chartjs-2";
+import { Bar, Pie, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,6 +15,7 @@ import {
   Legend,
   PointElement,
   LineElement,
+  ArcElement,
 } from "chart.js";
 import { Table } from "antd";
 import { IDashboard } from "@/types";
@@ -33,8 +33,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Title,
-  Tooltip,
-  Legend
+  ArcElement
 );
 
 interface Props {}
@@ -155,6 +154,52 @@ const Page = ({}: Props) => {
               },
             }}
             data={answersData}
+          />
+        </div>
+      </div>
+      <div className="px-[20px] py-[20px] bg-white rounded-[8px] shadow-md mt-[30px] w-full flex-row flex justify-between">
+        <div className="w-[35%] h-auto">
+          <p className="text-gray-500 font-sans text-xl mb-5 text-center min-h-[60px]">
+            Distribution of Responses with and without Feedback
+          </p>
+          <Pie
+            className=""
+            data={{
+              labels: ["Responses with Feedback", "Responses without Feedback"],
+              datasets: [
+                {
+                  label: "Total: ",
+                  data: [data?.contents?.feedback, data?.contents?.no_feedback],
+                  backgroundColor: ["#4049FF", "#E9EFFC"],
+                  borderWidth: 0,
+                  hoverBackgroundColor: ["#4049FF", "#E9EFFC"],
+                },
+              ],
+            }}
+          />
+        </div>
+        <div className="w-[35%] h-auto">
+          <p className="text-gray-500 font-sans text-xl mb-5 text-center min-h-[60px]">
+            Distribution of User Feedback {"\n"}
+          </p>
+          <Pie
+            className=""
+            data={{
+              labels: [
+                "Wrong answer",
+                "Wrong explain",
+                "Wrong both answer and explain",
+              ],
+              datasets: [
+                {
+                  label: "Total: ",
+                  data: data?.contents?.type_feedback,
+                  backgroundColor: ["#448EFC", "#1CCAB8", "#FFD56D"],
+                  borderWidth: 0,
+                  hoverBackgroundColor: ["#448EFC", "#1CCAB8", "#FFD56D"],
+                },
+              ],
+            }}
           />
         </div>
       </div>
