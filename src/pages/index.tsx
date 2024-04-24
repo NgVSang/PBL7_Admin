@@ -106,7 +106,7 @@ const Page = () => {
         setLoading(true);
         const conversationId = currentConversation?._id || "";
         const newArr = answers.map((ans, index) => {
-          return `${uppercaseLetters[index]}. ${ans}`;
+          return `${uppercaseLetters[index]}. ${ans.trim()}`;
         });
         setContents((contents) => [
           ...contents,
@@ -126,7 +126,7 @@ const Page = () => {
         if (loggedin) {
           res = await ModelApi.getAnswerByUser({
             answers: newArr,
-            question: question,
+            question: question.trim(),
             conversationId: conversationId,
           });
           if (!currentConversation) {
@@ -145,7 +145,7 @@ const Page = () => {
         } else {
           res = await ModelApi.getAnswerByCustomer({
             answers: newArr,
-            question: question,
+            question: question.trim(),
             conversationId: conversationId,
           });
         }
