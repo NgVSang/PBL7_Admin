@@ -9,7 +9,7 @@ import { uppercaseLetters } from "@/constants";
 import { authSelector } from "@/redux/reducers";
 import { ModelApi } from "@/services";
 import { IContent, IConversation } from "@/types";
-import { Avatar, Button, Input, List, Skeleton } from "antd";
+import { Avatar, Button, Dropdown, Input, List, Skeleton } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, {
@@ -33,8 +33,16 @@ const Page = () => {
   const [answers, setAnswers] = useState<string[]>(["", ""]);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [version, setVersion] = useState(1);
+
   const [currentConversation, setCurrentConversation] =
     useState<IConversation>();
+
+  useEffect(() => {
+    if (user && user.role === 2) {
+      router.push("/admin");
+    }
+  }, []);
 
   const handleGetHistory = useCallback(async () => {
     try {
@@ -128,6 +136,7 @@ const Page = () => {
             answers: newArr,
             question: question.trim(),
             conversationId: conversationId,
+            version: version,
           });
           if (!currentConversation) {
             try {
@@ -147,6 +156,7 @@ const Page = () => {
             answers: newArr,
             question: question.trim(),
             conversationId: conversationId,
+            version: version,
           });
         }
         setQuestions("");
@@ -176,7 +186,7 @@ const Page = () => {
     } finally {
       setLoading(false);
     }
-  }, [answers, question, currentConversation, contents]);
+  }, [answers, question, currentConversation, contents, version]);
 
   useEffect(() => {
     if (messageContainerRef.current) {
@@ -249,9 +259,61 @@ const Page = () => {
       </div>
       <div className="flex relative h-full max-w-full flex-1 flex-col overflow-hidden self-end z-1">
         <div className="sticky top-0 z-10 flex min-h-[40px] items-center  border-b p-[10px]">
-          <span className="text-2xl font-sans font-medium text-black p-3 cursor-pointer">
-            HistoryQuiz
-          </span>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "1",
+                  label: (
+                    <div
+                      onClick={() => {
+                        setVersion(1);
+                      }}
+                      className="h-[30px] flex flex-row items-center"
+                    >
+                      <span className="ml-3 text-base font-sans text-black">
+                        Version 1.1
+                      </span>
+                    </div>
+                  ),
+                },
+                {
+                  key: "2",
+                  label: (
+                    <div
+                      onClick={() => {
+                        setVersion(2);
+                      }}
+                      className="h-[30px] flex flex-row items-center"
+                    >
+                      <span className="ml-3 text-base font-sans text-black">
+                        Version 1.2
+                      </span>
+                    </div>
+                  ),
+                },
+                {
+                  key: "3",
+                  label: (
+                    <div
+                      onClick={() => {
+                        setVersion(3);
+                      }}
+                      className="h-[30px] flex flex-row items-center"
+                    >
+                      <span className="ml-3 text-base font-sans text-black">
+                        Version 1.3
+                      </span>
+                    </div>
+                  ),
+                },
+              ],
+            }}
+          >
+            <span className="text-2xl font-sans font-medium text-black p-3 cursor-pointer">
+              HistoryQuiz v1.{version}
+            </span>
+          </Dropdown>
         </div>
         <div
           className="overflow-y-auto h-full w-full flex-1 overflow-hidden items-center flex flex-col"

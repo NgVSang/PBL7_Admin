@@ -226,7 +226,7 @@ const Page = () => {
   return (
     <Content className="flex-1 p-6 bg-[#F5F6FA]">
       <span className="font-sans text-black text-2xl font-bold">Settings</span>
-      <div className="px-[20px] py-[20px] bg-white rounded-[12px] shadow-md mt-[30px] w-full h-[400px]">
+      <div className="px-[20px] py-[20px] bg-white rounded-[12px] shadow-md mt-[30px] w-full min-h-[400px]">
         <Tabs items={items} />
       </div>
       {/* <div className="px-[20px] py-[20px] bg-white rounded-[8px] shadow-md mt-[30px] w-full">
