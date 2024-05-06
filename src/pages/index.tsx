@@ -30,7 +30,7 @@ const Page = () => {
   const [question, setQuestions] = useState("");
   const [data, setData] = useState<IConversation[]>([]);
   const [contents, setContents] = useState<IContent[]>([]);
-  const [answers, setAnswers] = useState<string[]>(["", ""]);
+  const [answers, setAnswers] = useState<string[]>(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [version, setVersion] = useState(1);
@@ -159,8 +159,8 @@ const Page = () => {
             version: version,
           });
         }
-        setQuestions("");
-        setAnswers(["", ""]);
+        // setQuestions("");
+        // setAnswers(["", ""]);
         setContents((contents) => [
           ...contents,
           {
@@ -344,75 +344,77 @@ const Page = () => {
             )}
           </div>
         </div>
-        <div className="py-8 px-5 gap-[20px] flex flex-col bg-gray-100">
-          <Input
-            className="min-h-[50px] text-xl text-black rounded-[12px] border-gray-400"
-            placeholder="Question"
-            value={question}
-            onChange={(event) => {
-              setQuestions(event.target.value);
-            }}
-            tabIndex={0}
-          />
-          <div
-            className="flex flex-row gap-y-5 justify-between flex-wrap max-h-[140px] overflow-y-auto bar"
-            style={{
-              scrollbarWidth: "none",
-            }}
-          >
-            {answers.map((ans, index) => (
-              <div className="w-[47%] flex flex-row items-center" key={index}>
-                <span className="text-black text-2xl mr-3">
-                  {uppercaseLetters[index]}.
-                </span>
-                <Input
-                  className="min-h-[50px] text-xl text-black rounded-[12px] border-gray-400 w-full"
-                  placeholder={`Input answer ${uppercaseLetters[index]}`}
-                  value={ans}
-                  tabIndex={index + 1}
-                  onChange={(event) => {
-                    setAnswers(
-                      answers.map((text, i) => {
-                        if (i === index) {
-                          return event.target.value;
-                        } else {
-                          return text;
-                        }
-                      })
-                    );
-                  }}
-                  suffix={
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => {
-                        deleteAnswers(index);
-                      }}
-                    >
-                      <Image src={DeleteIcon} alt="Submit" width={20} />
-                    </div>
-                  }
-                />
-              </div>
-            ))}
-          </div>
-          <div className="w-full flex flex-row justify-end gap-5">
+        <div className="py-6 px-[20px] bg-gray-100 justify-center flex">
+          <div className="gap-[15px] flex flex-col max-w-[900px]">
+            <Input
+              className="min-h-[40px] text-base text-black rounded-[12px] border-gray-400"
+              placeholder="Question"
+              value={question}
+              onChange={(event) => {
+                setQuestions(event.target.value);
+              }}
+              tabIndex={0}
+            />
             <div
-              className="min-w-[200px] min-h-[48px] text-black border border-gray-600 rounded-xl bg-white flex items-center justify-center cursor-pointer hover:border-blue-400 hover:text-blue-400"
-              onClick={addNewAnswers}
+              className="flex flex-row gap-y-5 justify-between flex-wrap max-h-[140px] overflow-y-auto bar"
+              style={{
+                scrollbarWidth: "none",
+              }}
             >
-              <span className="font-sans text-base font-medium">Add</span>
+              {answers.map((ans, index) => (
+                <div className="w-[47%] flex flex-row items-center" key={index}>
+                  <span className="text-black text-2xl mr-3">
+                    {uppercaseLetters[index]}.
+                  </span>
+                  <Input
+                    className="min-h-[40px] text-base text-black rounded-[12px] border-gray-400 w-full"
+                    placeholder={`Input answer ${uppercaseLetters[index]}`}
+                    value={ans}
+                    tabIndex={index + 1}
+                    onChange={(event) => {
+                      setAnswers(
+                        answers.map((text, i) => {
+                          if (i === index) {
+                            return event.target.value;
+                          } else {
+                            return text;
+                          }
+                        })
+                      );
+                    }}
+                    suffix={
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => {
+                          deleteAnswers(index);
+                        }}
+                      >
+                        <Image src={DeleteIcon} alt="Submit" width={20} />
+                      </div>
+                    }
+                  />
+                </div>
+              ))}
             </div>
-            <Button
-              className="min-h-[48px] rounded-[12px] min-w-[200px]"
-              type="primary"
-              loading={loading}
-              disabled={loading}
-              onClick={handleGetAnswer}
-            >
-              <span className="font-sans text-base text-white font-medium">
-                Submit
-              </span>
-            </Button>
+            <div className="w-full flex flex-row justify-end gap-5">
+              <div
+                className="min-w-[200px] min-h-[48px] text-black border border-gray-600 rounded-xl bg-white flex items-center justify-center cursor-pointer hover:border-blue-400 hover:text-blue-400"
+                onClick={addNewAnswers}
+              >
+                <span className="font-sans text-base font-medium">Add</span>
+              </div>
+              <Button
+                className="min-h-[48px] rounded-[12px] min-w-[200px]"
+                type="primary"
+                loading={loading}
+                disabled={loading}
+                onClick={handleGetAnswer}
+              >
+                <span className="font-sans text-base text-white font-medium">
+                  Submit
+                </span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
