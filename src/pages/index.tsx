@@ -272,7 +272,7 @@ const Page = () => {
                       className="h-[30px] flex flex-row items-center"
                     >
                       <span className="ml-3 text-base font-sans text-black">
-                        Version 1.1
+                        LLAMA
                       </span>
                     </div>
                   ),
@@ -287,31 +287,31 @@ const Page = () => {
                       className="h-[30px] flex flex-row items-center"
                     >
                       <span className="ml-3 text-base font-sans text-black">
-                        Version 1.2
+                        BLOOMZ
                       </span>
                     </div>
                   ),
                 },
-                {
-                  key: "3",
-                  label: (
-                    <div
-                      onClick={() => {
-                        setVersion(3);
-                      }}
-                      className="h-[30px] flex flex-row items-center"
-                    >
-                      <span className="ml-3 text-base font-sans text-black">
-                        Version 1.3
-                      </span>
-                    </div>
-                  ),
-                },
+                // {
+                //   key: "3",
+                //   label: (
+                //     <div
+                //       onClick={() => {
+                //         setVersion(3);
+                //       }}
+                //       className="h-[30px] flex flex-row items-center"
+                //     >
+                //       <span className="ml-3 text-base font-sans text-black">
+                //         Version 1.3
+                //       </span>
+                //     </div>
+                //   ),
+                // },
               ],
             }}
           >
             <span className="text-2xl font-sans font-medium text-black p-3 cursor-pointer">
-              HistoryQuiz v1.{version}
+              HistoryQuiz {version === 1 ? "LLAMA" : "BLOOMZ"}
             </span>
           </Dropdown>
         </div>
