@@ -4,6 +4,7 @@ import {
   SmallLogoIcon,
   SubmitIcon,
 } from "@/assets/icons";
+import { MenuOutlined } from "@ant-design/icons";
 import { ContentQuiz, SidebarButton, UserInfor } from "@/components";
 import { uppercaseLetters } from "@/constants";
 import { authSelector } from "@/redux/reducers";
@@ -27,6 +28,7 @@ const Page = () => {
   const messageContainerRef = useRef<any>(null);
   const { user, loggedin } = useSelector(authSelector);
 
+  const [show, setShow] = useState(false);
   const [question, setQuestions] = useState("");
   const [data, setData] = useState<IConversation[]>([]);
   const [contents, setContents] = useState<IContent[]>([]);
@@ -199,10 +201,15 @@ const Page = () => {
     setCurrentConversation(undefined);
     setContents([]);
   }, []);
+  console.log(show);
 
   return (
     <div className="bg-white relative z-0 flex h-screen w-full overflow-hidden">
-      <div className="w-[25%] min-w-[200px] max-w-[300px] h-full flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary">
+      <div
+        className={`absolute ${
+          !show && "hidden"
+        } shadow sm:relative z-20 max-w-[260px] sm:block sm:w-[25%] min-w-[200px] sm:max-w-[350px] h-full flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary`}
+      >
         <div className="bg-gray-50 h-full flex flex-col justify-between">
           <SidebarButton
             text="New chat"
@@ -210,11 +217,11 @@ const Page = () => {
             className="mx-[20px] mt-[20px]"
             onClick={handleAddNewChat}
           />
-          <div className="">
+          <div className="h-full max-h-[70%]">
             <p className="text-base font-sans text-gray-500 mx-[20px]">
               History
             </p>
-            <div className="mt-[20px] flex flex-col gap-2 h-[450px] overflow-y-scroll px-[20px]">
+            <div className="mt-[20px] flex flex-col gap-2 h-full max-h-[90%] overflow-y-scroll px-[20px]">
               {data.map((conversation) => (
                 <SidebarButton
                   text={conversation.title}
@@ -259,6 +266,14 @@ const Page = () => {
       </div>
       <div className="flex relative h-full max-w-full flex-1 flex-col overflow-hidden self-end z-1">
         <div className="sticky top-0 z-10 flex min-h-[40px] items-center  border-b p-[10px]">
+          <div
+            className="p-[10px] block sm:hidden z-10"
+            onClick={() => {
+              setShow(true);
+            }}
+          >
+            <MenuOutlined />
+          </div>
           <Dropdown
             menu={{
               items: [
@@ -318,6 +333,9 @@ const Page = () => {
         <div
           className="overflow-y-auto h-full w-full flex-1 overflow-hidden items-center flex flex-col"
           ref={messageContainerRef}
+          onClick={() => {
+            setShow(false);
+          }}
         >
           <div className="flex flex-col pb-[30px] max-w-[800px] w-[90%]">
             {contents.map((e) => (
@@ -345,7 +363,7 @@ const Page = () => {
           </div>
         </div>
         <div className="py-6 px-[20px] bg-gray-100 justify-center flex">
-          <div className="gap-[15px] flex flex-col max-w-[900px]">
+          <div className="gap-[15px] flex flex-col max-w-[900px] w-full">
             <Input
               className="min-h-[40px] text-base text-black rounded-[12px] border-gray-400"
               placeholder="Question"
@@ -362,7 +380,10 @@ const Page = () => {
               }}
             >
               {answers.map((ans, index) => (
-                <div className="w-[47%] flex flex-row items-center" key={index}>
+                <div
+                  className="w-[90%] sm:w-[47%] flex flex-row items-center"
+                  key={index}
+                >
                   <span className="text-black text-2xl mr-3">
                     {uppercaseLetters[index]}.
                   </span>
@@ -398,13 +419,13 @@ const Page = () => {
             </div>
             <div className="w-full flex flex-row justify-end gap-5">
               <div
-                className="min-w-[200px] min-h-[48px] text-black border border-gray-600 rounded-xl bg-white flex items-center justify-center cursor-pointer hover:border-blue-400 hover:text-blue-400"
+                className="w-[40%] max-w-[200px] min-h-[48px] text-black border border-gray-600 rounded-xl bg-white flex items-center justify-center cursor-pointer hover:border-blue-400 hover:text-blue-400"
                 onClick={addNewAnswers}
               >
                 <span className="font-sans text-base font-medium">Add</span>
               </div>
               <Button
-                className="min-h-[48px] rounded-[12px] min-w-[200px]"
+                className="min-h-[48px] rounded-[12px] w-[40%] max-w-[200px]"
                 type="primary"
                 loading={loading}
                 disabled={loading}
