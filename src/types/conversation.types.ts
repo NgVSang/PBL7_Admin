@@ -15,6 +15,8 @@ export interface IContent {
   createdAt: string;
   explanation: string;
   question: string;
+  top_k: string;
+  version: number;
   type: "ask" | "answer";
   updatedAt: string;
 }

@@ -62,6 +62,20 @@ const ContentQuiz: FC<ContentQuizProps> = ({ data }) => {
       </div>
     );
   }
+
+  const title = useMemo(() => {
+    switch (data.version) {
+      case 1:
+        return "LLAMA";
+      case 2:
+        return "BLOOMZ";
+      case 3:
+        return "QWEN";
+
+      default:
+        return "";
+    }
+  }, [data.version]);
   return (
     <div
       className="flex flex-row px-[20px] pt-[30px] items-start gap-2 w-full"
@@ -77,7 +91,7 @@ const ContentQuiz: FC<ContentQuizProps> = ({ data }) => {
       </div>
       <div className=" flex flex-col gap-4 mt-[7px] w-full">
         <span className="font-sans font-medium text-black text-base">
-          HistoryQuiz
+          HistoryQuiz {title}
         </span>
         <div className="flex flex-col mt-[5px] gap-2">
           <p className="font-sans font-semibold text-black text-xl mb-[10px]">
@@ -87,6 +101,14 @@ const ContentQuiz: FC<ContentQuizProps> = ({ data }) => {
           <p className="font-sans text-black text-base">
             <span className="font-semibold text-xl">Explain:</span>{" "}
             {data.explanation === "" ? "Not Found" : data.explanation}
+          </p>
+          <p className="font-sans text-black text-base">
+            <span className="font-semibold text-xl">Reference:</span>{" "}
+            {data.top_k === ""
+              ? "Not Found"
+              : `Sách giáo khoa lịch sử lớp ${data.top_k.split("_")[0]} bài ${
+                  data.top_k.split("_")[1]
+                }`}
           </p>
         </div>
         <div className="flex flex-row h-[30px]">

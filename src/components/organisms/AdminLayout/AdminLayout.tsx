@@ -57,6 +57,14 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
       },
       {
         key: "4",
+        icon: <FieldTimeOutlined />,
+        label: "Crawl",
+        onClick: () => {
+          router.push("/admin/Crawl");
+        },
+      },
+      {
+        key: "5",
         icon: <SettingOutlined />,
         label: "Setting",
         onClick: () => {
@@ -105,10 +113,10 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
       case "/admin/User":
         select = "3";
         break;
-      case "/admin/Setting":
+      case "/admin/Crawl":
         select = "4";
         break;
-      case "/order-management":
+      case "/admin/Setting":
         select = "5";
         break;
       case "/requests":

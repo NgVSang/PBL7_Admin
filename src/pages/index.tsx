@@ -1,10 +1,4 @@
-import {
-  DeleteIcon,
-  NewChatIcon,
-  SmallLogoIcon,
-  SubmitIcon,
-} from "@/assets/icons";
-import { MenuOutlined } from "@ant-design/icons";
+import { DeleteIcon, SmallLogoIcon, MenuIcon } from "@/assets/icons";
 import { ContentQuiz, SidebarButton, UserInfor } from "@/components";
 import { uppercaseLetters } from "@/constants";
 import { authSelector } from "@/redux/reducers";
@@ -130,6 +124,8 @@ const Page = () => {
             question: question,
             type: "ask",
             updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
+            top_k: "",
+            version: version,
           },
         ]);
         let res: any;
@@ -161,8 +157,8 @@ const Page = () => {
             version: version,
           });
         }
-        // setQuestions("");
-        // setAnswers(["", ""]);
+        setQuestions("");
+        setAnswers(["", "", "", ""]);
         setContents((contents) => [
           ...contents,
           {
@@ -175,6 +171,8 @@ const Page = () => {
             question: question,
             type: "answer",
             updatedAt: "Wed, 17 Apr 2024 08:46:54 GMT",
+            version: version,
+            top_k: res.data.top_k,
           },
         ]);
       }
@@ -201,7 +199,20 @@ const Page = () => {
     setCurrentConversation(undefined);
     setContents([]);
   }, []);
-  console.log(show);
+
+  const title = useMemo(() => {
+    switch (version) {
+      case 1:
+        return "LLAMA";
+      case 2:
+        return "BLOOMZ";
+      case 3:
+        return "QWEN";
+
+      default:
+        return "";
+    }
+  }, [version]);
 
   return (
     <div className="bg-white relative z-0 flex h-screen w-full overflow-hidden">
@@ -272,7 +283,7 @@ const Page = () => {
               setShow(true);
             }}
           >
-            <MenuOutlined />
+            <Image src={MenuIcon} alt="Logo" className="w-[15px] h-[15px]" />
           </div>
           <Dropdown
             menu={{
@@ -307,26 +318,26 @@ const Page = () => {
                     </div>
                   ),
                 },
-                // {
-                //   key: "3",
-                //   label: (
-                //     <div
-                //       onClick={() => {
-                //         setVersion(3);
-                //       }}
-                //       className="h-[30px] flex flex-row items-center"
-                //     >
-                //       <span className="ml-3 text-base font-sans text-black">
-                //         Version 1.3
-                //       </span>
-                //     </div>
-                //   ),
-                // },
+                {
+                  key: "3",
+                  label: (
+                    <div
+                      onClick={() => {
+                        setVersion(3);
+                      }}
+                      className="h-[30px] flex flex-row items-center"
+                    >
+                      <span className="ml-3 text-base font-sans text-black">
+                        QWEN
+                      </span>
+                    </div>
+                  ),
+                },
               ],
             }}
           >
             <span className="text-2xl font-sans font-medium text-black p-3 cursor-pointer">
-              HistoryQuiz {version === 1 ? "LLAMA" : "BLOOMZ"}
+              HistoryQuiz {title}
             </span>
           </Dropdown>
         </div>
