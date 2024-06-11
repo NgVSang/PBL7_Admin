@@ -14,3 +14,11 @@ export interface IRecord {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IFinetuning {
+  _id: string;
+  answers: number;
+  result: string;
+  createdAt: string;
+  updatedAt: string;
+}

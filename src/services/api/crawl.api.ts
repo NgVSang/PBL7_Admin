@@ -1,4 +1,4 @@
-import { IRecord } from "@/types";
+import { IFinetuning, IRecord } from "@/types";
 import instance from "./axios";
 
 const getCrawlHis = () => {
@@ -9,7 +9,17 @@ const handleCrawlData = () => {
   return instance.post<IRecord>("/crawl");
 };
 
+const getListFinetuning = () => {
+  return instance.get<IFinetuning[]>("/finetune");
+};
+
+const handleFinetuning = () => {
+  return instance.post<IFinetuning>("/finetune");
+};
+
 export const CrawlApi = {
   handleCrawlData,
   getCrawlHis,
+  handleFinetuning,
+  getListFinetuning,
 };
